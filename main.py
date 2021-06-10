@@ -58,7 +58,12 @@ def lose(mind):
     LOSEMINE = mind
 
     for ind, val in np.ndenumerate(MINEFIELD):
-        if val: GRID[ind] = Status.Mined
+        if val:
+
+            if GRID[ind] is Status.Flagged:
+                GRID[ind] = Status.MinFlag
+
+            else: GRID[ind] = Status.Mined
 
 
 def expandZero(ind, nonzero=False):
@@ -156,7 +161,7 @@ def drawTile(index, val, screen, offset: float=0):
             i.drawTo(screen)
 
 
-        elif GRID[index] in (Status.Mined, Status.Flagged):
+        elif GRID[index] not in (Status.Nothing, 0):
             i = symbol_list[GRID[index]]
             i.x, i.y = getPos(i, index, offset=offset)
 
