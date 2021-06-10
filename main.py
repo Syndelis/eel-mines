@@ -51,7 +51,17 @@ def getPos(text, index, offset: float=0):
             offset*offsetvec
 
 
-def expandZero(ind):
+def lose(mind):
+    global LOST, LOSEMINE
+
+    LOST = True
+    LOSEMINE = mind
+
+    for ind, val in np.ndenumerate(MINEFIELD):
+        if val: GRID[ind] = Status.Mined
+
+
+def expandZero(ind, nonzero=False):
 
     GRID[ind] = Status.Shown
 
@@ -61,6 +71,7 @@ def expandZero(ind):
         if (x, y) == ind: continue
 
         if (npind < GRIDSIZE).all() and (npind >= 0).all():
+
             if GRID[x, y] is not Status.Shown and not MINEFIELD[x, y]:
 
                 GRID[x, y] = Status.Shown
@@ -68,6 +79,9 @@ def expandZero(ind):
 
                 if NUMBERS[x, y] == 0 or NUMBERS[x, y] == SOLVED[x, y]:
                     expandZero((x, y))
+
+            elif nonzero and MINEFIELD[x, y] and GRID[x, y] is not Status.Flagged:
+                lose((x, y))
 
 
 @game.load
@@ -208,7 +222,7 @@ def logic(screen):
 
                 if GRID[mind] is Status.Shown:
                     if NUMBERS[mind] == SOLVED[mind]:
-                        expandZero(mind)
+                        expandZero(mind, True)
 
                 else:
                     GRID[mind] = Status.Mined if MINEFIELD[mind] else Status.Shown
@@ -216,12 +230,7 @@ def logic(screen):
                         expandZero(mind)
 
                     if MINEFIELD[mind]:
-
-                        LOST = True
-                        LOSEMINE = mind
-
-                        for ind, val in np.ndenumerate(MINEFIELD):
-                            if val: GRID[ind] = Status.Mined
+                        lose(mind)
 
                 mouseRelease(0)
 
@@ -247,8 +256,8 @@ def logic(screen):
 
             else: REDRAW = False
 
-        elif keyPressed('R'): initGrid(screen)
-        if WON and keyPressed('R'): initGrid(screen)
+    if keyPressed('R'): initGrid(screen)
+    elif keyPressed('Q'): screen.close()
     
     """
     for i in range(6):
