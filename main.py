@@ -9,18 +9,19 @@ class Status(Enum):
     Shown   = 1
     Flagged = 2
     Mined   = 3
+    MinFlag = 4
 
 BASE_COLOR = 0x00D111FF
 RED_MULTI  = 0x20230400
 OTHER_SUB  = 0x000F2F00
 
-game = Eel('Eel Mines')
+game = Eel('Eel Mines', width=1080, height=960)
 
 global MINEFIELD, NUMBERS, GRIDSIZE, GRIDSCREENSIZE, GRID, BUFFER
 MINEFIELD = NUMBERS = GRID = BUFFER = None
-GRIDSIZE = np.array([8, 8])
+GRIDSIZE = np.array([16, 16])
 GRIDSCREENSIZE = None
-MINEAMNT = 10
+MINEAMNT = 40
 
 global SOLVED
 SOLVED = None
@@ -96,8 +97,9 @@ def initGrid(screen):
         for i in range(9):
             number_list.append(GAMEFONT.text(0, 0, bytes(str(i), "utf-8")))
 
-        symbol_list[Status.Mined] = GAMEFONT.text(0, 0, bytes("\uf1e2", "utf-8"))
+        symbol_list[Status.Mined]   = GAMEFONT.text(0, 0, bytes("\uf1e2", "utf-8"))
         symbol_list[Status.Flagged] = GAMEFONT.text(0, 0, bytes("\uf73f", "utf-8"))
+        symbol_list[Status.MinFlag] = GAMEFONT.text(0, 0, bytes("\ufbc3", "utf-8"))
 
         BUFFER = Canvas(*screen.dimensions)
     
