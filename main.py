@@ -1,5 +1,5 @@
 from eelengine import Eel, Canvas, mousePressed, mouseRelease, keyPressed
-from eelengine.figure import setColor, drawRect, Font, Rectangle
+from eelengine.figure import setColor, drawRect, Font, Rectangle, Line
 import numpy as np
 from enum import Enum
 from collections import Counter
@@ -115,6 +115,9 @@ def initGrid(screen):
 
         for i in range(9):
             number_list.append(GAMEFONT.text(0, 0, bytes(str(i), "utf-8")))
+
+        number_list[0] = Rectangle(0, 0, 0, 0)
+        number_list[0].bearing = 0
 
         symbol_list[Status.Mined]   = GAMEFONT.text(0, 0, bytes("\uf1e2", "utf-8"))
         symbol_list[Status.Flagged] = GAMEFONT.text(0, 0, bytes("\uf73f", "utf-8"))
